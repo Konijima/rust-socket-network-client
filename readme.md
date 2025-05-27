@@ -2,6 +2,9 @@
 
 A simple Rust WebSocket client for secure communication with a Rust-based server using RSA authentication (challenge-response with signed nonce).
 
+## Get the server repo here
+[Socket Network Server](https://github.com/Konijima/rust-socket-network-server)
+
 ## Features
 
 - Connects to a WebSocket server (`ws://localhost:8081` by default)
