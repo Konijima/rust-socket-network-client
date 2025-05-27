@@ -11,31 +11,36 @@ A simple Rust WebSocket client for secure communication with a Rust-based server
 
 ## Requirements
 
-- Rust (stable toolchain): [install instructions](https://www.rust-lang.org/tools/install)
+- Rust (stable toolchain): [Install Rust](https://www.rust-lang.org/tools/install)
 - OpenSSL (for key generation)
 
 ## Setup
 
 ### 1. Generate or Obtain Your RSA Private Key
 
-If you don’t already have a keypair, generate one:
+**To generate a compatible PKCS#1 private key (needed by this client):**
+
 ```sh
 mkdir -p keys
-openssl genpkey -algorithm RSA -out keys/device123.p8.pem -pkeyopt rsa_keygen_bits:2048
-openssl rsa -in keys/device123.p8.pem -out keys/device123.pem
-rm keys/device123.p8.pem
+openssl genrsa -traditional -out keys/device123.pem 2048
 ````
 
-* The private key must be in **PKCS#1 PEM** format:
+* This creates `keys/device123.pem` with:
 
   ```
   -----BEGIN RSA PRIVATE KEY-----
   ```
 
-* Your server must have the matching public key:
+**To extract the matching public key (give this to the server):**
 
-  ```sh
-  openssl rsa -in keys/device123.pem -pubout -RSAPublicKey_out -out keys/device123.pub.pem
+```sh
+openssl rsa -in keys/device123.pem -pubout -RSAPublicKey_out -out keys/device123.pub.pem
+```
+
+* This creates `keys/device123.pub.pem` with:
+
+  ```
+  -----BEGIN RSA PUBLIC KEY-----
   ```
 
 ### 2. Place the Private Key
@@ -61,6 +66,7 @@ cargo run
 
 * **Error about “bad private key” or “ASN1”:**
   Ensure the private key is in PKCS#1 PEM format (`-----BEGIN RSA PRIVATE KEY-----`).
+  Do **not** use keys starting with `-----BEGIN PRIVATE KEY-----`.
 
 * **Authentication failed:**
   The server must have the matching public key registered.
@@ -80,3 +86,4 @@ MIT
 ---
 
 *For questions or issues, open a GitHub issue or contact the maintainer.*
+
